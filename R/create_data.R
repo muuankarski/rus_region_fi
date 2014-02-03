@@ -1,3 +1,7 @@
+##********************************##
+# Tabular data
+##********************************##
+
 library(rustfare)
 ind <- IndicatorRosstat()
 
@@ -61,22 +65,61 @@ regDat <- rbind(reg01,reg03,reg04,reg05,
                 reg15,reg16,reg17,reg18,
                 reg19,reg20)
 
-datFedDist <- fedDistDat[,c("region_en","year","indicator","value","level")]
-datReg <- regDat[,c("region_en","year","indicator","value","level")]
+datFedDist <- fedDistDat[,c("region_en","year","indicator","value","level","id_shape")]
+datReg <- regDat[,c("region_en","year","indicator","value","level","id_shape")]
 
 ####### Load shapefile keys from my github
 
-library(RCurl)
-GHurl <- getURL("https://raw2.github.com/muuankarski/data/master/russia/regionkey.csv")
-reg <- read.csv(text = GHurl)
-GHurl <- getURL("https://raw2.github.com/muuankarski/data/master/russia/regionkey_fd.csv")
-dist <- read.csv(text = GHurl)
+#library(RCurl)
+#GHurl <- getURL("https://raw2.github.com/muuankarski/data/master/russia/regionkey.csv")
+#reg <- read.csv(text = GHurl)
+#GHurl <- getURL("https://raw2.github.com/muuankarski/data/master/russia/regionkey_fd.csv")
+#dist <- read.csv(text = GHurl)
 # names(dist) <- c("idx","russian","ID","NAME_1","region_en")
 
 # Join rosstat with geos
-datFedDist <- merge(datFedDist,dist,by="region_en")
-datReg <- merge(datReg,reg,by="region_en")
+#datFedDist <- merge(datFedDist,dist,by="region_en")
+#datReg <- merge(datReg,reg,by="region_en")
 
 # Write each level indicidually
-save(datReg, file="data/datReg.RData")
-save(datFedDist, file="data/datFedDist.RData")
+#save(datReg, file="data/datReg.RData")
+#save(datFedDist, file="data/datFedDist.RData")
+
+##********************************##
+# Spatial data
+##********************************##
+
+
+# Regional level shape
+# Level1
+library(rgdal)
+shape <- readOGR(dsn = "/home/aurelius/workspace/data/shapefiles/russia/gadm/RUS_adm_simple/", 
+                     layer = "RUS_adm1")
+# fortify the shapefile
+library(ggplot2)
+shape$id <- rownames(shape@data)
+map.points <- fortify(shape, region = "id")
+map.df_reg <- merge(map.points, shape, by = "id")
+
+save(map.df_reg, file="data/map.df_reg.RData")
+
+# level 0
+library(rgdal)
+shape <- readOGR(dsn = "/home/aurelius/workspace/data/shapefiles/russia/gadm/RUS_adm_simple/", 
+                 layer = "RUS_adm0_2013")
+# fortify the shapefile
+library(ggplot2)
+shape$id <- rownames(shape@data)
+map.points <- fortify(shape, region = "id")
+map.df_fd <- merge(map.points, shape, by = "id")
+
+save(map.df_fd, file="data/map.df_fd.RData")
+
+##********************************##
+## Tabular +  geo data
+##********************************##
+
+tab_geo_reg <- merge(map.df_reg, datReg, by.x = "ID_1", by.y = "id_shape", all.x = TRUE)
+save(tab_geo_reg, file="data/tab_geo_reg.RData")
+tab_geo_fd <- merge(map.df_fd, datFedDist, by.x = "ID_1", by.y = "id_shape", all.x = TRUE)
+save(tab_geo_fd, file="data/tab_geo_fd.RData")
