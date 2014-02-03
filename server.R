@@ -18,7 +18,7 @@ shinyServer(function(input, output) {
            "syntyvyys" = "crude_birth_rate" ,
            "bruttokansantuote aluetasolla" = "gross_regional_product" ,
            "imeväiskuolleisuus" = "infant_mortality_rate" ,
-           "eliniänodote" = "life_expectancy" ,
+           #"eliniänodote" = "life_expectancy" ,
            "eliniänodote miehillä" = "life_expectancy_men" ,
            "eliniänodote keskimäärin" = "life_expectancy_total" ,
            "eliniänodote naisilla" = "life_expectancy_women" ,
@@ -62,11 +62,12 @@ datasetInput_fd <- reactive(function() {
     ggplot(plotDat, aes(long,lat,group=group)) +
       geom_polygon(aes(fill = value)) +
       geom_polygon(data = plotDat, aes(long,lat), fill=NA, color = "white") + # white borders
-      geom_text(data=cnames, aes(long, lat, label = region_en, group=region_en), size=3, color="black") +
+      geom_text(data=cnames, aes(long, lat, label = region_en, group=region_en), size=3, color="white") +
       coord_map(project="orthographic", xlim=c(25,190),
                 ylim=c(45,70))  + # projection
-      labs(title=paste(input$indicator," vuonna ",input$year,sep="")) +
-      theme(legend.position="top")
+      labs(title=paste(input$indicator," vuonna ",input$year," aluetasolla",sep="")) +
+      theme(legend.position="top") +
+      guides(fill = guide_legend(keywidth = 3, keyheight = 1))
     
   })
 
@@ -81,7 +82,7 @@ datasetInput_fd <- reactive(function() {
                                 by=c("year","region_en")),
                   aes(year,value,group=region_en,label=region_en),
                 hjust=1) +
-      labs(title=paste(input$indicator," vuonna ",input$year,sep="")) +
+      labs(title=paste(input$indicator," vuonna ",input$year," aluetasolla",sep="")) +
       theme(legend.position="top")
     
   })  
@@ -102,11 +103,12 @@ datasetInput_fd <- reactive(function() {
     ggplot(plotDat, aes(long,lat,group=group)) +
       geom_polygon(aes(fill = value)) +
       geom_polygon(data = plotDat, aes(long,lat), fill=NA, color = "white") + # white borders
-      geom_text(data=cnames, aes(long, lat, label = region_en, group=region_en), size=4, color="black") +
+      geom_text(data=cnames, aes(long, lat, label = region_en, group=region_en), size=4, color="white") +
       coord_map(project="orthographic", xlim=c(25,190),
                 ylim=c(45,70))  + # projection
-      labs(title=paste(input$indicator," vuonna ",input$year,sep="")) +
-      theme(legend.position="top")
+      labs(title=paste(input$indicator," vuonna ",input$year," federaatiopiiritasolla",sep="")) +
+      theme(legend.position="top") +
+      guides(fill = guide_legend(keywidth = 3, keyheight = 1))
     
   })
   
@@ -121,7 +123,7 @@ datasetInput_fd <- reactive(function() {
                            by=c("year","region_en")),
                 aes(year,value,group=region_en,label=region_en),
                 hjust=1) +
-      labs(title=paste(input$indicator," vuonna ",input$year,sep="")) +
+      labs(title=paste(input$indicator," vuonna ",input$year," federaatiopiiritasolla",sep="")) +
       theme(legend.position="top")
     
   })  
@@ -137,10 +139,18 @@ datasetInput_fd <- reactive(function() {
 output$downloadPlot_reg <- downloadHandler(
   filename = function() { paste("indicator_",input$indicator,"_year_",input$year,Sys.time(),'.png', sep='') },
   content = function(file) {
-    png(file, width=1600, height=1600,res=72)
+    png(file, width=3600, height=3600,res=72)
     print(plotInput_reg())
     dev.off()
   })
+  
+  output$downloadPlot_reg_line <- downloadHandler(
+    filename = function() { paste("indicator_",input$indicator,Sys.time(),'.png', sep='') },
+    content = function(file) {
+      png(file, width=800, height=600,res=72)
+      print(plotInput_reg_line())
+      dev.off()
+    })
 
 output$downloadPlot_fd <- downloadHandler(
   filename = function() { paste("indicator_",input$indicator,"_year_",input$year,Sys.time(),'.png', sep='') },
@@ -149,4 +159,15 @@ output$downloadPlot_fd <- downloadHandler(
     print(plotInput_fd())
     dev.off()
   })
+  
+  output$downloadPlot_fd_line <- downloadHandler(
+    filename = function() { paste("indicator_",input$indicator,Sys.time(),'.png', sep='') },
+    content = function(file) {
+      png(file, width=800, height=600,res=72)
+      print(plotInput_fd_line())
+      dev.off()
+    })
+  
 })
+
+
