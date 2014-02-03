@@ -14,7 +14,9 @@ shinyUI(fluidPage(theme = "bootstrap_spacelab.css",
                   
                   tabsetPanel(
                     tabPanel("Aluetaso", plotOutput("plot_reg", height="650px", width="100%")),
-                    tabPanel("Federaatiopiirit", plotOutput("plot_fd", height="650px", width="100%"))
+                    tabPanel("Federaatiopiirit", plotOutput("plot_fd", height="650px", width="100%")),
+                    tabPanel("Aluetaso viivat", plotOutput("plot_reg_line", height="650px", width="100%")),
+                    tabPanel("FP viivat", plotOutput("plot_fd_line", height="650px", width="100%"))
                   ),
         hr(),
         fluidRow(

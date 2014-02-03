@@ -33,7 +33,7 @@ fedDistDat <- rbind(fedDist01,fedDist02,fedDist03,fedDist04,fedDist05,
                     fedDist15,fedDist16,fedDist17,fedDist18,
                     fedDist19,fedDist20,fedDist21)
 
-fedDistDat$region_en <- paste("FD",fedDistDat$region_en,sep="_")
+#fedDistDat$region_en <- paste("FD",fedDistDat$region_en,sep="_")
 ## --- REGIONAL LEVEL ---- ##
 
 
@@ -67,6 +67,9 @@ regDat <- rbind(reg01,reg03,reg04,reg05,
 
 datFedDist <- fedDistDat[,c("region_en","year","indicator","value","level","id_shape")]
 datReg <- regDat[,c("region_en","year","indicator","value","level","id_shape")]
+
+save(datFedDist, file="data/datFedDist.RData")
+save(datReg, file="data/datReg.RData")
 
 ####### Load shapefile keys from my github
 

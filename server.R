@@ -37,8 +37,8 @@ shinyServer(function(input, output) {
   
   
 datasetInput_reg <- reactive(function() {
-#     load("data/datReg.RData")
-#     load("data/datFedDist.RData")
+
+     load("data/datFedDist.RData")
     load("data/tab_geo_reg.RData")
     plotDat <- tab_geo_reg[tab_geo_reg$indicator == variableInputIndicator(),]
     plotDat <- plotDat[plotDat$year == input$year,]
@@ -69,9 +69,29 @@ datasetInput_fd <- reactive(function() {
       theme(legend.position="top")
     
   })
+
+  plotInput_reg_line <- reactive(function() {
+    load("data/datReg.RData")
+    plotDat <- datReg[datReg$indicator == variableInputIndicator(),]
+    library(ggplot2)
+    # subset data for highlighiting Russia
+    ggplot(plotDat, aes(year,value,group=region_en)) +
+      geom_point() + geom_line() +
+      geom_text(data=merge(plotDat, aggregate(year ~ region_en, plotDat, max),
+                                by=c("year","region_en")),
+                  aes(year,value,group=region_en,label=region_en),
+                hjust=1) +
+      labs(title=paste(input$indicator," vuonna ",input$year,sep="")) +
+      theme(legend.position="top")
+    
+  })  
   
   output$plot_reg <- reactivePlot(function() {
     print(plotInput_reg())
+  })
+  
+  output$plot_reg_line <- reactivePlot(function() {
+    print(plotInput_reg_line())
   })
   
   plotInput_fd <- reactive(function() {
@@ -90,8 +110,28 @@ datasetInput_fd <- reactive(function() {
     
   })
   
+  plotInput_fd_line <- reactive(function() {
+    load("data/datFedDist.RData")
+    plotDat <- datFedDist[datFedDist$indicator == variableInputIndicator(),]
+    library(ggplot2)
+    # subset data for highlighiting Russia
+    ggplot(plotDat, aes(year,value,group=region_en)) +
+      geom_point() + geom_line() +
+      geom_text(data=merge(plotDat, aggregate(year ~ region_en, plotDat, max),
+                           by=c("year","region_en")),
+                aes(year,value,group=region_en,label=region_en),
+                hjust=1) +
+      labs(title=paste(input$indicator," vuonna ",input$year,sep="")) +
+      theme(legend.position="top")
+    
+  })  
+  
   output$plot_fd <- reactivePlot(function() {
     print(plotInput_fd())
+  })
+  
+  output$plot_fd_line <- reactivePlot(function() {
+    print(plotInput_fd_line())
   })
 
 output$downloadPlot_reg <- downloadHandler(
