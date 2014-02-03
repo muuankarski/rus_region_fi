@@ -74,7 +74,7 @@ shinyUI(#fluidPage(theme = "bootstrap_spacelab.css",
                                            Creative Commons Attribution 4.0 International License</a>.")),
                        h4("Lähdekoodi"),
                        helpText(HTML("<ul>
-                                           <li>@ <a href=\"https://github.com/muuankarski/QogCorr\"><strong>GitHub</strong></a></li>
+                                           <li>@ <a href=\"https://github.com/muuankarski/rus_region_fi\"><strong>GitHub</strong></a></li>
                                            </ul>"))
                 )
                  )
