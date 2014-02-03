@@ -36,7 +36,7 @@ shinyUI(#fluidPage(theme = "bootstrap_spacelab.css",
                                         tabPanel("Kartta", plotOutput("plot_reg", height="650px", width="100%"))),
                                      hr(),
         fluidRow(
-                column(5,
+                column(3,
                  h4("Muokkaa kuviota"),
                  selectInput("indicator", "Valitse indikaattori:", 
                              choices = c("keskipalkka","keskitulo","keskimääräinen eläke",
@@ -63,7 +63,20 @@ shinyUI(#fluidPage(theme = "bootstrap_spacelab.css",
                  h5("Alueet"),
                  downloadButton('downloadPlot_reg', 'Lataa kartta'),
                  downloadButton('downloadPlot_reg_line', 'Lataa viivakuvio')
-                 )
+                 ),
+                column(3,
+                       h4("Lisenssi"),
+                       helpText(HTML("<a rel=\"license\" href=\"http://creativecommons.org/licenses/by/4.0/\">
+                                           <img alt=\"Creative Commons License\" style=\"border-width:0\" 
+                                           src=\"http://i.creativecommons.org/l/by/4.0/80x15.png\" />
+                                           </a><br />This work is licensed under a <a rel=\"license\" 
+                                           href=\"http://creativecommons.org/licenses/by/4.0/\">
+                                           Creative Commons Attribution 4.0 International License</a>.")),
+                       h4("Lähdekoodi"),
+                       helpText(HTML("<ul>
+                                           <li>@ <a href=\"https://github.com/muuankarski/QogCorr\"><strong>GitHub</strong></a></li>
+                                           </ul>"))
+                )
                  )
         
         ))
